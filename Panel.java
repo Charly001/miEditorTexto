@@ -15,6 +15,7 @@ import java.util.concurrent.ForkJoinPool.ManagedBlocker;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Panel extends JFrame implements ActionListener {
@@ -38,11 +39,14 @@ public class Panel extends JFrame implements ActionListener {
 	private JTextArea userText;
 	private JScrollPane scrollUserText;
 	private File currentFile= null;
+	private String clipboard;
+
 	public Panel() {
 		
 		activate();
 		
 	}
+	
 	
 	public void activate() {
 		
@@ -145,9 +149,6 @@ public class Panel extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource().equals(menuItemExit)) {
-			frame.dispose(); 													
-		}
 		
 		if(e.getSource().equals(menuItemOpen)) {
 			JFileChooser fileChooser= new JFileChooser();			
@@ -182,12 +183,28 @@ public class Panel extends JFrame implements ActionListener {
 		
 		if(e.getSource().equals(menuItemSave)) {
 			 	if(currentFile==null) {
-			 		JFileChooser fileChooser= new JFileChooser();			
+			 		JFileChooser fileChooser= new JFileChooser();
+			 		
+			 		FileFilter filter = new FileNameExtensionFilter("Documentos de texto (*.txt)", "txt"); 
+			 		fileChooser.addChoosableFileFilter(filter);
+			 		fileChooser.setFileFilter(filter);
+			 		
+			 		String text= userText.getText();
+			 		if (text.trim().isEmpty()) {
+			 			fileChooser.setSelectedFile(new File("Sin titulo.txt"));
+			 		}
+			 		
 					int select= fileChooser.showSaveDialog(userText);
+					
 				
 					if(select==JFileChooser.APPROVE_OPTION) {		
 				
-						currentFile= fileChooser.getSelectedFile();				
+						currentFile= fileChooser.getSelectedFile();
+						String path= currentFile.getAbsolutePath();
+						if (!path.toLowerCase().endsWith(".txt")) {
+							currentFile = new File(fileChooser.getSelectedFile() + ".txt");							
+						}
+						
 						try {
 							if(currentFile.createNewFile()) {
 								
@@ -219,16 +236,25 @@ public class Panel extends JFrame implements ActionListener {
 		
 		if(e.getSource().equals(menuItemSaveAs)) {
 			JFileChooser fileChooser= new JFileChooser();
+			FileFilter filter = new FileNameExtensionFilter("Documentos de texto (*.txt)", "txt"); 
+	 		fileChooser.addChoosableFileFilter(filter);
+	 		fileChooser.setFileFilter(filter);
+			
+			String text= userText.getText();	 		
+	 		if (text.trim().isEmpty()) {
+	 			fileChooser.setSelectedFile(new File("Sin titulo.txt"));
+	 		}
 			
 			int select= fileChooser.showSaveDialog(userText);
-		
 			if(select==JFileChooser.APPROVE_OPTION) {		
 		
-				File f= fileChooser.getSelectedFile();				
+				currentFile= fileChooser.getSelectedFile();
+				String path= currentFile.getAbsolutePath();
+				if (!path.toLowerCase().endsWith(".txt")) currentFile = new File(fileChooser.getSelectedFile() + ".txt");		
 				try {
-					if(f.createNewFile()) {
+					if(currentFile.createNewFile()) {
 						
-						FileWriter fWriter= new FileWriter(f);
+						FileWriter fWriter= new FileWriter(currentFile);
 						fWriter.write(userText.getText());
 						fWriter.close();						
 					};
@@ -244,6 +270,23 @@ public class Panel extends JFrame implements ActionListener {
 		
 		if(e.getActionCommand().equals("Nueva ventana")) {
 			Main.main(null);
+		}
+		
+		if(e.getSource().equals(menuItemExit)) {
+			frame.dispose(); 													
+		}
+		
+		if(e.getSource().equals(menuItemCut)) {
+			clipboard= userText.getSelectedText();
+			userText.replaceSelection("");
+		}
+		
+		if(e.getSource().equals(menuItemCopy)) {
+			clipboard= userText.getSelectedText();
+		}
+		
+		if(e.getSource().equals(menuItemPaste)) {
+			userText.replaceSelection(clipboard);
 		}
 		
 	}	
