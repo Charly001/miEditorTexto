@@ -1,20 +1,26 @@
 package editorTexto;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.ForkJoinPool.ManagedBlocker;
 
-import javax.swing.*;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -35,7 +41,7 @@ public class Panel extends JFrame implements ActionListener {
 	private JMenuItem menuItemCopy;
 	private JMenuItem menuItemPaste;
 	private JMenuItem menuItemDelete;
-	private JMenuItem menuItemSearch;
+	//private JMenuItem menuItemSearch;
 	private JTextArea userText;
 	private JScrollPane scrollUserText;
 	private File currentFile= null;
@@ -115,13 +121,13 @@ public class Panel extends JFrame implements ActionListener {
 				menuItemCopy= new JMenuItem("Copiar");
 				menuItemPaste= new JMenuItem("Pegar");
 				menuItemDelete= new JMenuItem("Eliminar");
-				menuItemSearch= new JMenuItem("Buscar");
+				//menuItemSearch= new JMenuItem("Buscar");
 				
 				menuItemCut.addActionListener(this);
 				menuItemCopy.addActionListener(this);
 				menuItemPaste.addActionListener(this);
 				menuItemDelete.addActionListener(this);
-				menuItemSearch.addActionListener(this);
+				//menuItemSearch.addActionListener(this);
 				
 				menuFile.setMnemonic(KeyEvent.VK_A);
 				menuEdit.setMnemonic(KeyEvent.VK_S);
@@ -138,7 +144,7 @@ public class Panel extends JFrame implements ActionListener {
 		menuEdit.add(menuItemCut);
 		menuEdit.add(menuItemCopy);
 		menuEdit.add(menuItemPaste);
-		menuEdit.add(menuItemSearch);
+		//menuEdit.add(menuItemSearch);
 		menuBar.add(menuFile);
 		menuBar.add(menuEdit);
 
